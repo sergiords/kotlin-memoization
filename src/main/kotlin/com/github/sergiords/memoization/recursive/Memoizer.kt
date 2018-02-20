@@ -19,7 +19,7 @@ fun memoizer(f: (F) -> F): F {
 
     }
 
-    val g = combiner { h -> f({ n -> cache.computeIfAbsent(n, h(h)) }) }
+    val g = combiner { h -> f { n -> cache.computeIfAbsent(n, h(h)) } }
 
     return g(g)
 }
