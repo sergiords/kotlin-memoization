@@ -8,13 +8,13 @@ fun memoizer(f: (F) -> F): F {
 
     val cache = mutableMapOf<Int, Int>()
 
-    fun combiner(handlerToF: (Handler) -> F): Handler = object : Handler {
+    fun combiner(handlerCombiner: (Handler) -> F): Handler = object : Handler {
 
         override fun invoke(handler: Handler): F {
 
-            val handlerToF1 = handlerToF(handler)
+            val combined = handlerCombiner(handler)
 
-            return { x -> cache.computeIfAbsent(x, handlerToF1) }
+            return { x -> cache.computeIfAbsent(x, combined) }
         }
 
     }
