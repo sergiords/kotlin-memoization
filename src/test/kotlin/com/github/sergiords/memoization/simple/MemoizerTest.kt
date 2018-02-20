@@ -1,4 +1,4 @@
-package com.github.sergiords.memoization
+package com.github.sergiords.memoization.simple
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -6,22 +6,15 @@ import org.junit.Test
 class MemoizationTests {
 
     @Test
-    fun `square function`() {
-
-        listOf(1, 2, 3, 4, 10).forEach {
-            assertEquals(it * it, square(it))
-        }
-
-    }
-
-    @Test
     fun `memoized square`() {
+
+        fun square(n: Int): Int = n * n
 
         listOf(1, 2, 3, 4, 1, 2, 3, 4).forEach {
 
             val result = memoizedSquare(it)
 
-            assertEquals(it * it, result)
+            assertEquals(square(it), result)
 
         }
 
@@ -33,10 +26,13 @@ class MemoizationTests {
         var count = 0
         val memoized = memoizer { it -> ++count; it }
 
-        val sum = listOf(1, 2, 3, 4, 1, 2, 3, 4).map(memoized).sum()
+        listOf(1, 2, 3, 4, 1, 2, 3, 4).forEachIndexed { index, n ->
 
-        assertEquals(20, sum)
-        assertEquals(4, count)
+            val result: Any = memoized(n)
+
+            assertEquals(n, result)
+            assertEquals(n, count)
+        }
 
     }
 

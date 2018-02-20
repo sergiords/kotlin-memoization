@@ -1,4 +1,4 @@
-package com.github.sergiords.memoization
+package com.github.sergiords.memoization.simple
 
 fun square(x: Int) = x * x
 
