@@ -2,6 +2,7 @@ package com.github.sergiords.memoization.simple
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import kotlin.math.min
 
 class MemoizationTests {
 
@@ -29,9 +30,10 @@ class MemoizationTests {
         listOf(1, 2, 3, 4, 1, 2, 3, 4).forEachIndexed { index, n ->
 
             val result: Any = memoized(n)
+            val expectedCount = min(index + 1, 4) // count should only be able to reach 4
 
             assertEquals(n, result)
-            assertEquals(n, count)
+            assertEquals(expectedCount, count)
         }
 
     }
