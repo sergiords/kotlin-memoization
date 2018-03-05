@@ -4,24 +4,32 @@ typealias F = (Int) -> Int
 
 interface Handler : (Handler) -> F
 
-fun memoizer(f: (F) -> F): F {
+object H : Handler {
+
+    override fun invoke(h: Handler): F = { n -> if (n < 2) 1 else n * h(h)(n - 1) }
+
+}
+
+val factorialOf5 = H(H)(5)
+
+fun uncachedMemoizer(f2f: (F) -> F): F {
+
+    val h = object : Handler {
+        override fun invoke(h: Handler): F = f2f { n -> h(h)(n) }
+    }
+
+    return h(h)
+}
+
+fun memoizer(f2f: (F) -> F): F {
 
     val cache = mutableMapOf<Int, Int>()
 
-    fun combiner(handlerCombiner: (Handler) -> F): Handler = object : Handler {
-
-        override fun invoke(handler: Handler): F {
-
-            val combined = handlerCombiner(handler)
-
-            return { x -> cache.computeIfAbsent(x, combined) }
-        }
-
+    val h = object : Handler {
+        override fun invoke(h: Handler): F = f2f { n -> cache.computeIfAbsent(n, h(h)) }
     }
 
-    val g = combiner { h -> f { n -> cache.computeIfAbsent(n, h(h)) } }
-
-    return g(g)
+    return { n -> cache.computeIfAbsent(n, h(h)) }
 }
 
-val memoizedFactorial = memoizer { h -> { n -> if (n < 2) 1 else n * h(n - 1) } }
+val memoizedFactorial = memoizer { f -> { n -> if (n < 2) 1 else n * f(n - 1) } }
