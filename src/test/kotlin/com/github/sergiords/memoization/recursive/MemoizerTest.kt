@@ -37,8 +37,8 @@ class MemoizationTests {
         val uncachedFactorial = uncachedMemoizer { f -> { n -> ++count; if (n < 2) 1 else n * f(n - 1) } }
 
         listOf(
-            Pair(1, 1), Pair(2, 3), Pair(3, 6), Pair(4, 10),
-            Pair(1, 11), Pair(2, 13), Pair(3, 16), Pair(4, 20), Pair(5, 25)
+            (1 to 1), (2 to 3), (3 to 6), (4 to 10),
+            (1 to 11), (2 to 13), (3 to 16), (4 to 20), (5 to 25)
         ).forEach { (n, expectedCount) ->
 
             val result = uncachedFactorial(n)
@@ -72,8 +72,8 @@ class MemoizationTests {
         val memoized = memoizer { f -> { n -> count++; if (n < 2) 1 else n * f(n - 1) } }
 
         listOf(
-            Pair(1, 1), Pair(2, 2), Pair(3, 3), Pair(4, 4),
-            Pair(1, 4), Pair(2, 4), Pair(3, 4), Pair(4, 4), Pair(5, 5)
+            (1 to 1), (2 to 2), (3 to 3), (4 to 4),
+            (1 to 4), (2 to 4), (3 to 4), (4 to 4), (5 to 5)
         ).forEach { (n, expectedCount) ->
 
             val result = memoized(n)
